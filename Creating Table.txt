@@ -1,0 +1,213 @@
+
+CREATE TABLE Artist
+(
+  artist_id INT NOT NULL,
+  country VARCHAR(200) NOT NULL,
+  fname VARCHAR(200) NOT NULL,
+  lname VARCHAR(200) NOT NULL,
+  main_style VARCHAR(200) NOT NULL,
+  birthplace VARCHAR(200) NOT NULL,
+  DOB DATE NOT NULL,
+  PRIMARY KEY (artist_id)
+);
+
+CREATE TABLE Art_gallery_inventory
+(
+  id_obj INT NOT NULL,
+  art_name VARCHAR(200) NOT NULL,
+  mode VARCHAR(200) NOT NULL,
+  art_type VARCHAR(200) NOT NULL,
+  object_bought_price INT NOT NULL,
+  artist_id INT NOT NULL,
+  PRIMARY KEY (id_obj),
+  FOREIGN KEY (artist_id) REFERENCES Artist(artist_id)
+);
+
+
+CREATE TABLE Sculpture
+(
+  entry_year INT NOT NULL,
+  creation_year INT NOT NULL,
+  height INT NOT NULL,
+  weight INT NOT NULL,
+  width INT NOT NULL,
+  material_type VARCHAR(200) NOT NULL,
+  id_obj INT NOT NULL,
+  FOREIGN KEY (id_obj) REFERENCES Art_gallery_inventory(id_obj)
+);
+
+CREATE TABLE PrintMaking
+(
+  entry_year INT NOT NULL,
+  creation_year INT NOT NULL,
+  height INT NOT NULL,
+  width INT NOT NULL,
+  print_material VARCHAR(200) NOT NULL,
+  print_type VARCHAR(200) NOT NULL,
+  id_obj INT NOT NULL,
+  FOREIGN KEY (id_obj) REFERENCES Art_gallery_inventory(id_obj)
+);
+
+CREATE TABLE Painting
+(
+  entry_year INT NOT NULL,
+  creation_year INT NOT NULL,
+  height INT NOT NULL,
+  weight INT NOT NULL,
+  width INT NOT NULL,
+  paint_type VARCHAR(200) NOT NULL,
+  id_obj INT NOT NULL,
+  FOREIGN KEY (id_obj) REFERENCES Art_gallery_inventory(id_obj)
+);
+
+
+CREATE TABLE visitors
+(
+  visiting_id INT NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  age INT NOT NULL,
+  date DATE NOT NULL,
+  place VARCHAR(200) NOT NULL,
+  PRIMARY KEY (visiting_id)
+);
+
+CREATE TABLE Museums
+(
+  museum_id INT NOT NULL,
+  city VARCHAR(200) NOT NULL,
+  adult_entry_fee INT NOT NULL,
+  child_entry_fee INT NOT NULL,
+  PRIMARY KEY (museum_id)
+);
+
+CREATE TABLE VisitingAt
+(
+  visiting_id INT NOT NULL,
+  museum_id INT NOT NULL,
+  FOREIGN KEY (visiting_id) REFERENCES visitors(visiting_id),
+  FOREIGN KEY (museum_id) REFERENCES Museums(museum_id)
+);
+
+CREATE TABLE MaintainsAt
+(
+  maintain_cost_per_year INT NOT NULL,
+  museum_id INT NOT NULL,
+  id_obj INT NOT NULL,
+  FOREIGN KEY (museum_id) REFERENCES Museums(museum_id),
+  FOREIGN KEY (id_obj) REFERENCES Art_gallery_inventory(id_obj)
+);
+
+CREATE TABLE Exhibitions
+(
+  exhib_id INT NOT NULL,
+  exhib_name VARCHAR(200) NOT NULL,
+  venue VARCHAR(200) NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  start_time INT NOT NULL,
+  end_time INT NOT NULL,
+  PRIMARY KEY (exhib_id)
+);
+
+CREATE TABLE Exhibites
+(
+  sold_status VARCHAR(50) NOT NULL, 
+  id_obj INT NOT NULL,
+  exhib_id INT NOT NULL,
+  selling_price INT NOT NULL,
+  FOREIGN KEY (id_obj) REFERENCES Art_gallery_inventory(id_obj),
+  FOREIGN KEY (exhib_id) REFERENCES Exhibitions(exhib_id)
+);
+
+CREATE TABLE Customer
+(
+  cust_id INT NOT NULL,
+  address VARCHAR(200) NOT NULL,
+  budget INT NOT NULL,
+  cust_name VARCHAR(200) NOT NULL,
+  PRIMARY KEY (cust_id)
+);
+
+CREATE TABLE Auctioneer
+(
+  auctioneer_id INT NOT NULL,
+  auctioneer_name VARCHAR(200) NOT NULL,
+  PRIMARY KEY (auctioneer_id)
+);
+
+
+
+CREATE TABLE Exhibition_customers
+(
+  cust_id INT NOT NULL,
+  exhib_id INT NOT NULL,
+  FOREIGN KEY (cust_id) REFERENCES Customer(cust_id),
+  FOREIGN KEY (exhib_id) REFERENCES Exhibitions(exhib_id)
+);
+
+CREATE TABLE Order
+(
+  order_id INT NOT NULL,
+  sale_mode VARCHAR(200) NOT NULL,
+  sale_price INT NOT NULL,
+  cust_id INT NOT NULL,
+  PRIMARY KEY (order_id),
+  FOREIGN KEY (cust_id) REFERENCES Customer(cust_id)
+);
+
+CREATE TABLE Shipping
+(
+  ship_id INT NOT NULL,
+  ship_charge INT NOT NULL,
+  courier_company VARCHAR(200) NOT NULL,
+  order_id INT NOT NULL,
+  PRIMARY KEY (ship_id),
+  FOREIGN KEY (order_id) REFERENCES Order(order_id)
+);
+
+CREATE TABLE Auctions
+(
+  auct_id INT NOT NULL,
+  auction_date DATE NOT NULL,
+  auction_theatre VARCHAR(200) NOT NULL,
+  auctioneer_id INT NOT NULL,
+  PRIMARY KEY (auct_id),
+  FOREIGN KEY (auctioneer_id) REFERENCES Auctioneer(auctioneer_id)
+);
+
+CREATE TABLE Objects_in_Auction
+(
+  id_obj INT NOT NULL,
+  auction_id INT NOT NULL,
+  FOREIGN KEY (id_obj) REFERENCES Art_gallery_inventory(id_obj),
+  FOREIGN KEY (auction_id) REFERENCES Auctions(auct_id)
+);
+
+CREATE TABLE Auction_customer
+(
+  cust_id INT NOT NULL,
+  auct_id INT NOT NULL,
+  FOREIGN KEY (cust_id) REFERENCES Customer(cust_id),
+  FOREIGN KEY (auct_id) REFERENCES Auctions(auct_id)
+);
+
+CREATE TABLE Auction_register
+(
+  bid_start_price INT NOT NULL,
+  bid_end_price INT NOT NULL,
+  id_obj INT NOT NULL,
+  order_id INT NOT NULL,
+  auction_id INT NOT NULL,
+  FOREIGN KEY (id_obj) REFERENCES Art_gallery_inventory(id_obj),
+  FOREIGN KEY (order_id) REFERENCES Order(order_id),
+  FOREIGN KEY (auction_id) REFERENCES Auctions(auct_id)
+);
+
+CREATE TABLE Sold_item_details
+(
+  sold_mode VARCHAR(200) NOT NULL,
+  id_obj INT NOT NULL,
+  order_id INT NOT NULL,
+  FOREIGN KEY (id_obj) REFERENCES Art_gallery_inventory(id_obj),
+  FOREIGN KEY (order_id) REFERENCES Order(order_id)
+);
