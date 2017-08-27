@@ -26,3 +26,7 @@ List all the Arts which are used in London Art Gallery in year 2016
 List all the Painting Arts of type “color paint” and height < 15 inches
 List the title and  object type of Art of style “Abstract”
 
+Drive link for full project:-
+https://drive.google.com/open?id=0B7Q4j-mZ0ZviUXFITFNfOUd2cGM
+
+
